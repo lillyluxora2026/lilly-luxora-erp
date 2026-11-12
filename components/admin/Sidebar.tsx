@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { getMyPermissions } from '@/lib/actions/user-actions';
+import { ERP_FEATURES } from '@/lib/features';
 import { LayoutDashboard, ShoppingBag, Users, Settings, Package, FileText, LogOut, X, Folder, Truck, ClipboardList, CreditCard, Clock3, BadgePercent, ImagePlus } from 'lucide-react';
 import { createBrowserClient } from '@supabase/ssr';
 
@@ -12,26 +13,26 @@ function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
 }
 
-// Map menu items to required permissions
+// Map menu items to required permissions and feature flags
 // If permission is null, it's visible to everyone (or basic auth)
 const menuItems = [
-    { name: 'Dashboard', href: '/admin', icon: LayoutDashboard, permission: 'view_dashboard' },
-    { name: 'Products', href: '/admin/products', icon: Package, permission: 'manage_products' },
-    { name: 'Categories', href: '/admin/categories', icon: Folder, permission: 'manage_products' },
-    { name: 'Suppliers', href: '/admin/suppliers', icon: Truck, permission: 'manage_suppliers' },
-    { name: 'Purchase Orders', href: '/admin/purchase-orders', icon: ClipboardList, permission: 'manage_suppliers' },
-    { name: 'Orders', href: '/admin/orders', icon: ShoppingBag, permission: 'manage_orders' },
-    { name: 'Preorders', href: '/admin/preorders', icon: Clock3, permission: 'manage_orders' },
-    { name: 'Inventory', href: '/admin/inventory', icon: FileText, permission: 'manage_inventory' },
-    { name: 'POS', href: '/admin/pos', icon: CreditCard, permission: 'access_pos' },
-    { name: 'Customers', href: '/admin/customers', icon: Users, permission: 'manage_customers' },
-    { name: 'Reviews', href: '/admin/reviews', icon: FileText, permission: 'manage_reviews' },
-    { name: 'Users', href: '/admin/users', icon: Users, permission: 'manage_users' },
-    { name: 'Finance', href: '/admin/finance', icon: FileText, permission: 'manage_finance' },
-    { name: 'Coupons', href: '/admin/coupons', icon: BadgePercent, permission: 'manage_settings' },
-    { name: 'Banners', href: '/admin/banners', icon: ImagePlus, permission: 'manage_settings' },
-    { name: 'Settings', href: '/admin/settings', icon: Settings, permission: 'manage_settings' },
-];
+    { name: 'Dashboard', href: '/admin', icon: LayoutDashboard, permission: 'view_dashboard', enabled: true },
+    { name: 'Products', href: '/admin/products', icon: Package, permission: 'manage_products', enabled: true },
+    { name: 'Categories', href: '/admin/categories', icon: Folder, permission: 'manage_products', enabled: true },
+    { name: 'Suppliers', href: '/admin/suppliers', icon: Truck, permission: 'manage_suppliers', enabled: ERP_FEATURES.suppliers },
+    { name: 'Purchase Orders', href: '/admin/purchase-orders', icon: ClipboardList, permission: 'manage_suppliers', enabled: ERP_FEATURES.purchaseOrders },
+    { name: 'Orders', href: '/admin/orders', icon: ShoppingBag, permission: 'manage_orders', enabled: true },
+    { name: 'Preorders', href: '/admin/preorders', icon: Clock3, permission: 'manage_orders', enabled: ERP_FEATURES.preorders },
+    { name: 'Inventory', href: '/admin/inventory', icon: FileText, permission: 'manage_inventory', enabled: ERP_FEATURES.inventory },
+    { name: 'POS', href: '/admin/pos', icon: CreditCard, permission: 'access_pos', enabled: ERP_FEATURES.pos },
+    { name: 'Customers', href: '/admin/customers', icon: Users, permission: 'manage_customers', enabled: true },
+    { name: 'Reviews', href: '/admin/reviews', icon: FileText, permission: 'manage_reviews', enabled: true },
+    { name: 'Users', href: '/admin/users', icon: Users, permission: 'manage_users', enabled: ERP_FEATURES.users },
+    { name: 'Finance', href: '/admin/finance', icon: FileText, permission: 'manage_finance', enabled: ERP_FEATURES.finance },
+    { name: 'Coupons', href: '/admin/coupons', icon: BadgePercent, permission: 'manage_settings', enabled: ERP_FEATURES.coupons },
+    { name: 'Banners', href: '/admin/banners', icon: ImagePlus, permission: 'manage_settings', enabled: ERP_FEATURES.banners },
+    { name: 'Settings', href: '/admin/settings', icon: Settings, permission: 'manage_settings', enabled: ERP_FEATURES.settings },
+].filter((item) => item.enabled);
 
 interface SidebarProps {
     isOpen: boolean;

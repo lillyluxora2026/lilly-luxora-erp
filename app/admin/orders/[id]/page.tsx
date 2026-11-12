@@ -867,7 +867,7 @@ export default function OrderDetailPage() {
                   className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm text-gray-900 shadow-sm focus:border-gray-900 focus:outline-none"
                 >
                   <option value="online">Online</option>
-                  <option value="pos">POS</option>
+                  {headerForm.salesChannel === 'pos' ? <option value="pos">POS (Legacy)</option> : null}
                 </select>
               </label>
 

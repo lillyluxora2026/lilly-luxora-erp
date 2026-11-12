@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { getRequiredPermissionForPath } from '@/lib/permissions'
+import { isAdminRouteEnabled } from '@/lib/features'
 
 export async function middleware(request: NextRequest) {
     const response = NextResponse.next({
@@ -52,6 +53,10 @@ export async function middleware(request: NextRequest) {
             const url = new URL('/login', request.url)
             url.searchParams.set('return_to', request.nextUrl.pathname + request.nextUrl.search)
             return NextResponse.redirect(url)
+        }
+
+        if (!isAdminRouteEnabled(request.nextUrl.pathname)) {
+            return NextResponse.redirect(new URL('/admin', request.url))
         }
 
         const requiredPermission = getRequiredPermissionForPath(request.nextUrl.pathname)

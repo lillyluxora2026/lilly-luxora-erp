@@ -352,36 +352,6 @@ export default function OrdersPage() {
           </label>
 
           <label className="block">
-            <span className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-500">Channel</span>
-            <div className="grid grid-cols-3 overflow-hidden rounded-xl border-[1.5px] border-gray-300 bg-gray-50 p-1 text-sm shadow-sm">
-              {(['all', 'pos', 'online'] as const).map((channel) => (
-                <button
-                  key={channel}
-                  type="button"
-                  onClick={() => setFilters((current) => ({
-                    ...current,
-                    salesChannel: channel,
-                    fulfillmentStatus: current.fulfillmentStatus && !(
-                      channel === 'all'
-                        ? Array.from(new Set([...getAllowedFulfillmentStatuses('online'), ...getAllowedFulfillmentStatuses('pos')]))
-                        : getAllowedFulfillmentStatuses(channel)
-                    ).includes(current.fulfillmentStatus as never)
-                      ? ''
-                      : current.fulfillmentStatus,
-                  }))}
-                  className={`rounded-lg px-3 py-2 font-medium transition ${
-                    filters.salesChannel === channel ? 'bg-gray-900 text-white shadow-sm' : 'text-gray-600 hover:bg-white'
-                  }`}
-                >
-                  {channel === 'all' ? 'All' : channel.toUpperCase()}
-                </button>
-              ))}
-            </div>
-          </label>
-        </div>
-
-        <div className={`${showAdvancedFilters || hasAdvancedFiltersApplied ? 'mt-4 grid' : 'hidden'} gap-4 lg:mt-4 lg:grid lg:grid-cols-6`}>
-          <label className="block">
             <span className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-500">Customer Type</span>
             <select
               value={filters.customerType}
@@ -391,7 +361,6 @@ export default function OrdersPage() {
               <option value="all">All customers</option>
               <option value="registered">Registered</option>
               <option value="guest">Guest checkout</option>
-              <option value="walk-in">Walk-in POS</option>
             </select>
           </label>
 
@@ -401,7 +370,7 @@ export default function OrdersPage() {
               type="text"
               value={filters.paymentMethod}
               onChange={(event) => setFilters((current) => ({ ...current, paymentMethod: event.target.value }))}
-              placeholder="Cash, Card, UPI..."
+              placeholder="UPI, Card, Netbanking..."
               className="w-full rounded-xl border-[1.5px] border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/15"
             />
           </label>
@@ -536,7 +505,7 @@ export default function OrdersPage() {
           <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
             <div>
               <h2 className="text-lg font-bold text-gray-900">Orders Ledger</h2>
-              <p className="text-sm text-gray-500">One queue for online, guest, and walk-in POS orders.</p>
+              <p className="text-sm text-gray-500">Manage your online storefront and guest orders.</p>
             </div>
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <CalendarRange className="h-4 w-4" />
