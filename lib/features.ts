@@ -9,6 +9,7 @@ export const ERP_FEATURES = {
   coupons: true,
   banners: true,
   settings: true,
+  abandonedCheckouts: true,
 } as const;
 
 const DISABLED_ADMIN_ROUTE_PREFIXES = [
@@ -18,6 +19,7 @@ const DISABLED_ADMIN_ROUTE_PREFIXES = [
   !ERP_FEATURES.finance ? '/admin/finance' : null,
   !ERP_FEATURES.preorders ? '/admin/preorders' : null,
   !ERP_FEATURES.users ? '/admin/users' : null,
+  !ERP_FEATURES.abandonedCheckouts ? '/admin/abandoned-checkouts' : null,
 ].filter((prefix): prefix is string => Boolean(prefix));
 
 export function isAdminRouteEnabled(pathname: string): boolean {

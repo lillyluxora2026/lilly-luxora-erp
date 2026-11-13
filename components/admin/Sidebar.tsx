@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { getMyPermissions } from '@/lib/actions/user-actions';
 import { ERP_FEATURES } from '@/lib/features';
-import { LayoutDashboard, ShoppingBag, Users, Settings, Package, FileText, LogOut, X, Folder, Truck, ClipboardList, CreditCard, Clock3, BadgePercent, ImagePlus } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Users, Settings, Package, FileText, LogOut, X, Folder, Truck, ClipboardList, CreditCard, Clock3, BadgePercent, ImagePlus, ShoppingCart } from 'lucide-react';
 import { createBrowserClient } from '@supabase/ssr';
 
 // Simple utility if @/lib/utils doesn't exist
@@ -22,6 +22,7 @@ const menuItems = [
     { name: 'Suppliers', href: '/admin/suppliers', icon: Truck, permission: 'manage_suppliers', enabled: ERP_FEATURES.suppliers },
     { name: 'Purchase Orders', href: '/admin/purchase-orders', icon: ClipboardList, permission: 'manage_suppliers', enabled: ERP_FEATURES.purchaseOrders },
     { name: 'Orders', href: '/admin/orders', icon: ShoppingBag, permission: 'manage_orders', enabled: true },
+    { name: 'Abandoned Checkouts', href: '/admin/abandoned-checkouts', icon: ShoppingCart, permission: 'manage_orders', enabled: ERP_FEATURES.abandonedCheckouts },
     { name: 'Preorders', href: '/admin/preorders', icon: Clock3, permission: 'manage_orders', enabled: ERP_FEATURES.preorders },
     { name: 'Inventory', href: '/admin/inventory', icon: FileText, permission: 'manage_inventory', enabled: ERP_FEATURES.inventory },
     { name: 'POS', href: '/admin/pos', icon: CreditCard, permission: 'access_pos', enabled: ERP_FEATURES.pos },

@@ -19,6 +19,7 @@ const routePermissionMatchers: Array<{ prefix: string; permission: PermissionKey
   { prefix: '/admin/products', permission: 'manage_products' },
   { prefix: '/admin/inventory', permission: 'manage_inventory' },
   { prefix: '/admin/orders', permission: 'manage_orders' },
+  { prefix: '/admin/abandoned-checkouts', permission: 'manage_orders' },
   { prefix: '/admin/preorders', permission: 'manage_orders' },
   { prefix: '/admin/customers', permission: 'manage_customers' },
   { prefix: '/admin/suppliers', permission: 'manage_suppliers' },
