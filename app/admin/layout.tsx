@@ -6,9 +6,9 @@ export default async function AdminLayout({
 }: {
     children: React.ReactNode;
 }) {
-    await requireAuthenticatedAdmin();
+    const access = await requireAuthenticatedAdmin();
 
     return (
-        <AdminShell>{children}</AdminShell>
+        <AdminShell permissions={access.permissions}>{children}</AdminShell>
     )
 }

@@ -38,12 +38,13 @@ const menuItems = [
 interface SidebarProps {
     isOpen: boolean;
     onClose: () => void;
+    permissions?: string[];
 }
 
-export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+export default function Sidebar({ isOpen, onClose, permissions: initialPermissions }: SidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
-    const [permissions, setPermissions] = useState<string[] | null>(null);
+    const [permissions, setPermissions] = useState<string[] | null>(initialPermissions ?? null);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
 
     const supabase = createBrowserClient(
@@ -59,17 +60,20 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     };
 
     useEffect(() => {
-        // Fetch permissions
+        if (initialPermissions && initialPermissions.length > 0) {
+            setPermissions(initialPermissions);
+            return;
+        }
+
+        // Fallback: Fetch permissions if not provided by server layout
         getMyPermissions().then(res => {
             if (res.success && res.data) {
                 setPermissions(res.data);
             } else {
-                // Fallback: If fetch fails (maybe network), empty or default? 
-                // Let's assume empty means no access.
                 setPermissions([]);
             }
         });
-    }, []);
+    }, [initialPermissions]);
 
     // Filter items
     const filteredItems = menuItems.filter(item => {
@@ -130,6 +134,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                                 <Link
                                     key={item.name}
                                     href={item.href}
+                                    prefetch={false}
                                     onClick={() => onClose()} // Close on mobile navigation
                                     className={classNames(
                                         "flex items-center px-4 py-2 rounded-lg transition-colors group",

@@ -40,8 +40,7 @@ function LoginForm() {
             )
             setLoading(false)
         } else {
-            router.push(returnTo)
-            router.refresh()
+            window.location.href = returnTo
         }
     }
 

@@ -7,8 +7,10 @@ import Header from '@/components/admin/Header';
 
 export default function AdminShell({
   children,
+  permissions,
 }: {
   children: React.ReactNode;
+  permissions?: string[];
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
@@ -21,7 +23,7 @@ export default function AdminShell({
 
   return (
     <div className={`bg-gray-50 ${isPOS ? 'h-screen overflow-hidden' : 'min-h-screen'}`}>
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} permissions={permissions} />
 
       <div className={`flex flex-col lg:pl-64 transition-all duration-300 ${isPOS ? 'h-full' : 'min-h-screen'}`}>
         <Header onMenuClick={() => setSidebarOpen(true)} />
