@@ -17,9 +17,11 @@ function LoginForm() {
     const searchParams = useSearchParams()
     const returnTo = searchParams.get('return_to') || '/admin'
 
-    const supabase = createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    const [supabase] = useState(() =>
+        createBrowserClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        )
     )
 
     const handleLogin = async (e: React.FormEvent) => {
@@ -27,20 +29,35 @@ function LoginForm() {
         setLoading(true)
         setError(null)
 
-        const { error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-        })
+        try {
+            const trimmedEmail = email.trim()
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: trimmedEmail,
+                password,
+            })
 
-        if (error) {
-            setError(
-                error.message === 'Invalid login credentials'
-                    ? 'Wrong email or password. Check the spelling of your email address, or reset your password below.'
-                    : error.message
-            )
+            if (error) {
+                setError(
+                    error.message === 'Invalid login credentials'
+                        ? 'Wrong email or password. Check the spelling of your email address, or reset your password below.'
+                        : error.message
+                )
+                setLoading(false)
+                return
+            }
+
+            if (data?.session) {
+                // Hard navigation to ensure cookies are fresh and state is clean
+                window.location.href = returnTo
+            } else {
+                setError('Login succeeded but no active session was returned. Please try again.')
+                setLoading(false)
+            }
+        } catch (err: unknown) {
+            console.error('Login error:', err)
+            const message = err instanceof Error ? err.message : 'An unexpected error occurred during login. Please try again.'
+            setError(message)
             setLoading(false)
-        } else {
-            window.location.href = returnTo
         }
     }
 
@@ -49,16 +66,22 @@ function LoginForm() {
         setLoading(true)
         setError(null)
 
-        const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-            redirectTo: `${window.location.origin}/reset-password`,
-        })
+        try {
+            const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+                redirectTo: `${window.location.origin}/reset-password`,
+            })
 
-        if (error) {
-            setError(error.message)
-        } else {
-            setResetSent(true)
+            if (error) {
+                setError(error.message)
+            } else {
+                setResetSent(true)
+            }
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : 'Failed to send password reset. Please try again.'
+            setError(message)
+        } finally {
+            setLoading(false)
         }
-        setLoading(false)
     }
 
     const switchMode = (nextMode: 'login' | 'forgot') => {
